@@ -257,6 +257,7 @@ document.addEventListener(
     camera.position.x = -mouseX/10;
     mouseY = event.clientY - window.innerHeight/2;
     camera.position.y = mouseY/10;
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
     renderer.render(scene, camera);
     //window.requestAnimationFrame(function () {renderer.render(scene, camera)});
   },
