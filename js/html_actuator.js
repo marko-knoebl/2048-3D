@@ -1,14 +1,17 @@
+var renderer, camera, scene, materials, cubeSize;
 
 renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColorHex(0xccbbaa, 1);
 
-camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-camera.position.z = 150;
+camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+camera.position.z = 1500;
 scene = new THREE.Scene();
+scene.allObjects = [];
 
-cube = new THREE.CubeGeometry(16, 16, 16);
-var materials = {
+cubeSize = 160;
+
+materials = {
   2: new THREE.MeshLambertMaterial({color: 0xffffff}),
   4: new THREE.MeshLambertMaterial({color: 0x888888}),
   8: new THREE.MeshLambertMaterial({color: 0xff9944}),
@@ -22,15 +25,14 @@ var materials = {
   2048: new THREE.MeshLambertMaterial({color: 0xf65e3b}),
 };
 
-scene.allObjects = [];
-
-var ambientLight = new THREE.AmbientLight(0x222222);
-scene.add(ambientLight);
-
-var directionalLight = new THREE.DirectionalLight(0xffffff);
-directionalLight.position.set(10, 10, 30).normalize();
-directionalLight.castShadow = true;
-scene.add(directionalLight);
+// set up lights
+(function() {
+  scene.add(new THREE.AmbientLight(0x222222));
+  var directionalLight = new THREE.DirectionalLight(0xffffff);
+  directionalLight.position.set(10, 10, 30).normalize();
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
+}());
 
 function HTMLActuator() {
   this.tileContainer    = document.querySelector(".tile-container");
@@ -58,6 +60,8 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
         });
       });
     });
+    animationStartTime = new Date();
+    animate();
 
     self.updateScore(metadata.score);
     self.updateBestScore(metadata.bestScore);
@@ -91,23 +95,40 @@ HTMLActuator.prototype.clearTiles = function () {
   scene.allObjects.forEach(function (object) {
     scene.remove(object);
   });
+  scene.allObjcts = [];
 };
 
 
 // creating geometries for all numbers here so they don't get duplicated and use less memory
 geometries = {
-  '2' : new THREE.TextGeometry('2', {font: 'helvetiker', weight: 'bold', size: 8, height:1}),
-  '4' : new THREE.TextGeometry('4', {font: 'helvetiker', weight: 'bold', size: 8, height:1}),
-  '8' : new THREE.TextGeometry('8', {font: 'helvetiker', weight: 'bold', size: 8, height:1}),
-  '16' : new THREE.TextGeometry('16', {font: 'helvetiker', weight: 'bold', size: 8, height:1}),
-  '32' : new THREE.TextGeometry('32', {font: 'helvetiker', weight: 'bold', size: 8, height:1}),
-  '64' : new THREE.TextGeometry('64', {font: 'helvetiker', weight: 'bold', size: 8, height:1}),
-  '128' : new THREE.TextGeometry('128', {font: 'helvetiker', weight: 'bold', size: 5, height:1}),
-  '256' : new THREE.TextGeometry('256', {font: 'helvetiker', weight: 'bold', size: 5, height:1}),
-  '512' : new THREE.TextGeometry('512', {font: 'helvetiker', weight: 'bold', size: 5, height:1}),
-  '1024' : new THREE.TextGeometry('1024', {font: 'helvetiker', weight: 'bold', size: 4, height:1}),
-  '2048' : new THREE.TextGeometry('2048', {font: 'helvetiker', weight: 'bold', size: 4, height:1}),
-}
+  '2' : new THREE.TextGeometry('2', {font: 'helvetiker', weight: 'bold', size: 80, height:0.6}),
+  '4' : new THREE.TextGeometry('4', {font: 'helvetiker', weight: 'bold', size: 80, height:0.6}),
+  '8' : new THREE.TextGeometry('8', {font: 'helvetiker', weight: 'bold', size: 80, height:0.6}),
+  '16' : new THREE.TextGeometry('16', {font: 'helvetiker', weight: 'bold', size: 80, height:0.6}),
+  '32' : new THREE.TextGeometry('32', {font: 'helvetiker', weight: 'bold', size: 80, height:0.6}),
+  '64' : new THREE.TextGeometry('64', {font: 'helvetiker', weight: 'bold', size: 80, height:0.6}),
+  '128' : new THREE.TextGeometry('128', {font: 'helvetiker', weight: 'bold', size: 50, height:0.6}),
+  '256' : new THREE.TextGeometry('256', {font: 'helvetiker', weight: 'bold', size: 50, height:0.6}),
+  '512' : new THREE.TextGeometry('512', {font: 'helvetiker', weight: 'bold', size: 50, height:0.6}),
+  '1024' : new THREE.TextGeometry('1024', {font: 'helvetiker', weight: 'bold', size: 40, height:0.6}),
+  '2048' : new THREE.TextGeometry('2048', {font: 'helvetiker', weight: 'bold', size: 40, height:0.6}),
+};
+
+cubeGeometries = {
+  '2' : new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize),
+  '4' : new THREE.CubeGeometry(cubeSize+2, cubeSize+2, cubeSize+2),
+  '8' : new THREE.CubeGeometry(cubeSize+4, cubeSize+4, cubeSize+4),
+  '16' : new THREE.CubeGeometry(cubeSize+6, cubeSize+6, cubeSize+6),
+  '32' : new THREE.CubeGeometry(cubeSize+8, cubeSize+8, cubeSize+8),
+  '64' : new THREE.CubeGeometry(cubeSize+10, cubeSize+10, cubeSize+10),
+  '128' : new THREE.CubeGeometry(cubeSize+12, cubeSize+12, cubeSize+12),
+  '256' : new THREE.CubeGeometry(cubeSize+14, cubeSize+14, cubeSize+14),
+  '512' : new THREE.CubeGeometry(cubeSize+16, cubeSize+16, cubeSize+16),
+  '1024' : new THREE.CubeGeometry(cubeSize+18, cubeSize+18, cubeSize+18),
+  '2048' : new THREE.CubeGeometry(cubeSize+20, cubeSize+20, cubeSize+20),
+};
+
+tilesToProcess = [];
 
 HTMLActuator.prototype.addTile = function (tile) {
   var self = this;
@@ -116,7 +137,7 @@ HTMLActuator.prototype.addTile = function (tile) {
 
   // 3d element
   el = new THREE.Object3D();
-  el.add(new THREE.Mesh(cube, materials[tile.value]));
+  el.add(new THREE.Mesh(cubeGeometries[tile.value], materials[tile.value]));
 
   // create mesh for number
   if (tile.value === 2 ) {
@@ -127,26 +148,57 @@ HTMLActuator.prototype.addTile = function (tile) {
 
   // position number
   if (tile.value < 16) {
-    text.position = {x: -4, y: -4, z: 7.5};
+    text.position = {x: -40, y: -40, z: cubeSize/2+(Math.log(tile.value)/Math.log(2))};
   } else if (tile.value < 128) {
-    text.position = {x: -6, y: -4, z: 7.5};
+    text.position = {x: -60, y: -40, z: cubeSize/2+(Math.log(tile.value)/Math.log(2))};
   } else if (tile.value < 1024) {
-    text.position = {x: -6, y: -4, z: 7.5};
+    text.position = {x: -60, y: -40, z: cubeSize/2+(Math.log(tile.value)/Math.log(2))};
   } else {
-    text.position = {x: -6, y: -2.5, z: 7.5};
+    text.position = {x: -60, y: -2.50, z: cubeSize/2+(tile.value-2)/2};
+  }
+
+  if (tile.value === 2) {
+    text.position = {x: -40, y: -40, z: cubeSize/2 + 0};
+  } else if (tile.value === 4) {
+    text.position = {x: -40, y: -40, z: cubeSize/2 + 1};
+  } else if (tile.value === 8) {
+    text.position = {x: -40, y: -40, z: cubeSize/2 + 2};
+  } else if (tile.value === 16) {
+    text.position = {x: -60, y: -40, z: cubeSize/2 + 3};
+  } else if (tile.value === 32) {
+    text.position = {x: -60, y: -40, z: cubeSize/2 + 4};
+  } else if (tile.value === 64) {
+    text.position = {x: -60, y: -40, z: cubeSize/2 + 5};
+  } else if (tile.value === 128) {
+    text.position = {x: -60, y: -30, z: cubeSize/2 + 6};
+  } else if (tile.value === 256) {
+    text.position = {x: -60, y: -40, z: cubeSize/2 + 7};
+  } else if (tile.value === 512) {
+    text.position = {x: -60, y: -40, z: cubeSize/2 + 8};
+  } else if (tile.value === 1024) {
+    text.position = {x: -60, y: -25, z: cubeSize/2 + 9};
+  } else if (tile.value === 2048) {
+    text.position = {x: -60, y: -25, z: cubeSize/2 + 10};
   }
 
   el.add(text);
 
   var position  = tile.previousPosition || { x: tile.x, y: tile.y, z: tile.z};
   positionClass = this.positionClass(position);
-  el.position = {x: 40*(-1 + tile.x), y: 40*(1-tile.y), z: 40*(-1+tile.z)};
+  el.position = {x: 400*(-1 + tile.x), y: 400*(1-tile.y), z: 400*(-1+tile.z)};
   scene.allObjects.push(el);
+
+  tilesToProcess.push([el, tile.previousPosition, { x: tile.x, y: tile.y, z: tile.z}, tile.mergedFrom, tile.value]);
 
   // We can't use classlist because it somehow glitches when replacing classes
   var classes = ["tile", "tile-" + tile.value, positionClass];
 
   if (tile.value > 2048) classes.push("tile-super");
+
+  if (tile.mergedFrom || !tile.previousPosition) {
+    el.children[0].visible = false;
+    el.children[1].visible = false;
+  }
 
   // make the tiles move to their new position
   this.applyClasses(element, classes);
@@ -159,7 +211,6 @@ HTMLActuator.prototype.addTile = function (tile) {
     window.requestAnimationFrame(function () {
       classes[2] = self.positionClass({ x: tile.x, y: tile.y, z: tile.z });
       self.applyClasses(element, classes); // Update the position
-      //element_.position = {x: 80*(-1 + tile.x), y: 80*(1-tile.y), z: 80*(-1+tile.z)};
     });
   } else if (tile.mergedFrom) {
     classes.push("tile-merged");
@@ -176,7 +227,6 @@ HTMLActuator.prototype.addTile = function (tile) {
 
   // Put the tile on the board
   this.tileContainer.appendChild(element);
-  //scene.add(element_);
   renderer.render(scene, camera);
 };
 
@@ -254,14 +304,59 @@ document.addEventListener(
   'mousemove',
   function(event) {
     mouseX = event.clientX - window.innerWidth/2;
-    camera.position.x = -mouseX/10;
+    camera.position.x = -mouseX/1;
     mouseY = event.clientY - window.innerHeight/2;
-    camera.position.y = mouseY/10;
+    camera.position.y = mouseY/1;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     renderer.render(scene, camera);
     //window.requestAnimationFrame(function () {renderer.render(scene, camera)});
   },
   false
-)
+);
 
 document.body.appendChild(renderer.domElement);
+
+animate = function() {
+
+  now = new Date();
+  
+  // this value goes from 0 to 1 during the animation
+  r = (now - animationStartTime) / 500;
+
+  if (r > 1) {
+    // the animation has finished -> stop
+    tilesToProcess.forEach( function(tile) {
+      if (tile[1] !== null && !tile[3]) {
+        // move tiles to their final position
+        tile[0].position.x = 400*(-1 + tile[2].x);
+        tile[0].position.y = -400*(-1 + tile[2].y);
+        tile[0].position.z = 400*(-1 + tile[2].z);
+      }
+    });
+
+    // make all cubes visible (including the new ones)
+    scene.allObjects.forEach( function(obj) {
+      obj.children[0].visible = true;
+      obj.children[1].visible = true;
+    });
+    renderer.render(scene, camera);
+    return;
+  }
+  tilesToProcess.forEach( function(tile) {
+    if (tile[1] !== null && !tile[3]) {
+      // move tile from its old position to its new position
+      newx = 400*(-1 + tile[2].x);
+      oldx = 400*(-1 + tile[1].x);
+      tile[0].position.x = r * newx + (1-r) * oldx;
+      newy = -400*(-1 + tile[2].y);
+      oldy = -400*(-1 + tile[1].y);
+      tile[0].position.y = r * newy + (1-r) * oldy;
+      newz = 400*(-1 + tile[2].z);
+      oldz = 400*(-1 + tile[1].z);
+      tile[0].position.z = r * newz + (1-r) * oldz;
+    }
+  });
+
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+};
