@@ -10,7 +10,6 @@ scene = new THREE.Scene();
 scene.allObjects = [];
 
 cubeSize = 160;
-
 materials = {
   2: new THREE.MeshLambertMaterial({color: 0xffffff}),
   4: new THREE.MeshLambertMaterial({color: 0x888888}),
@@ -18,11 +17,11 @@ materials = {
   16: new THREE.MeshLambertMaterial({color: 0xee8844}),
   32: new THREE.MeshLambertMaterial({color: 0xee6633}),
   64: new THREE.MeshLambertMaterial({color: 0xee4422}),
-  128: new THREE.MeshLambertMaterial({color: 0xee4422}),
-  256: new THREE.MeshLambertMaterial({color: 0xf65e3b}),
-  512: new THREE.MeshLambertMaterial({color: 0xf65e3b}),
-  1024: new THREE.MeshLambertMaterial({color: 0xf65e3b}),
-  2048: new THREE.MeshLambertMaterial({color: 0xf65e3b}),
+  128: new THREE.MeshLambertMaterial({color: 0xe0bf5a}),
+  256: new THREE.MeshLambertMaterial({color: 0xe0bc48}),
+  512: new THREE.MeshLambertMaterial({color: 0xe0b835}),
+  1024: new THREE.MeshLambertMaterial({color: 0xe0b51e}),
+  2048: new THREE.MeshLambertMaterial({color: 0xe0b10d}),
 };
 
 // set up lights
@@ -107,11 +106,11 @@ geometries = {
   '16' : new THREE.TextGeometry('16', {font: 'helvetiker', weight: 'bold', size: 80, height:0.6}),
   '32' : new THREE.TextGeometry('32', {font: 'helvetiker', weight: 'bold', size: 80, height:0.6}),
   '64' : new THREE.TextGeometry('64', {font: 'helvetiker', weight: 'bold', size: 80, height:0.6}),
-  '128' : new THREE.TextGeometry('128', {font: 'helvetiker', weight: 'bold', size: 50, height:0.6}),
-  '256' : new THREE.TextGeometry('256', {font: 'helvetiker', weight: 'bold', size: 50, height:0.6}),
-  '512' : new THREE.TextGeometry('512', {font: 'helvetiker', weight: 'bold', size: 50, height:0.6}),
-  '1024' : new THREE.TextGeometry('1024', {font: 'helvetiker', weight: 'bold', size: 40, height:0.6}),
-  '2048' : new THREE.TextGeometry('2048', {font: 'helvetiker', weight: 'bold', size: 40, height:0.6}),
+  '128' : new THREE.TextGeometry('128', {font: 'helvetiker', weight: 'bold', size: 60, height:0.6}),
+  '256' : new THREE.TextGeometry('256', {font: 'helvetiker', weight: 'bold', size: 60, height:0.6}),
+  '512' : new THREE.TextGeometry('512', {font: 'helvetiker', weight: 'bold', size: 60, height:0.6}),
+  '1024' : new THREE.TextGeometry('1024', {font: 'helvetiker', weight: 'bold', size: 45, height:0.6}),
+  '2048' : new THREE.TextGeometry('2048', {font: 'helvetiker', weight: 'bold', size: 45, height:0.6}),
 };
 
 cubeGeometries = {
@@ -138,7 +137,6 @@ HTMLActuator.prototype.addTile = function (tile) {
   // 3d element
   el = new THREE.Object3D();
   el.add(new THREE.Mesh(cubeGeometries[tile.value], materials[tile.value]));
-
   // create mesh for number
   if (tile.value === 2 ) {
     text = new THREE.Mesh(geometries[tile.value], materials[4]);
@@ -170,15 +168,15 @@ HTMLActuator.prototype.addTile = function (tile) {
   } else if (tile.value === 64) {
     text.position = {x: -60, y: -40, z: cubeSize/2 + 5};
   } else if (tile.value === 128) {
-    text.position = {x: -60, y: -30, z: cubeSize/2 + 6};
+    text.position = {x: -75, y: -30, z: cubeSize/2 + 6};
   } else if (tile.value === 256) {
-    text.position = {x: -60, y: -40, z: cubeSize/2 + 7};
+    text.position = {x: -75, y: -30, z: cubeSize/2 + 7};
   } else if (tile.value === 512) {
-    text.position = {x: -60, y: -40, z: cubeSize/2 + 8};
+    text.position = {x: -75, y: -30, z: cubeSize/2 + 8};
   } else if (tile.value === 1024) {
-    text.position = {x: -60, y: -25, z: cubeSize/2 + 9};
+    text.position = {x: -75, y: -25, z: cubeSize/2 + 9};
   } else if (tile.value === 2048) {
-    text.position = {x: -60, y: -25, z: cubeSize/2 + 10};
+    text.position = {x: -75, y: -25, z: cubeSize/2 + 10};
   }
 
   el.add(text);
