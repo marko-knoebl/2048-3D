@@ -1,10 +1,10 @@
 var renderer, camera, scene, materials, cubeSize;
 
 renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(window.innerWidth*0.8, window.innerHeight*0.9);
 renderer.setClearColorHex(0xccbbaa, 1);
 
-camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+camera = new THREE.PerspectiveCamera(50, window.innerWidth*0.8 / (window.innerHeight*0.9), 1, 10000);
 camera.position.z = 1500;
 scene = new THREE.Scene();
 scene.allObjects = [];
@@ -312,7 +312,15 @@ document.addEventListener(
   false
 );
 
-document.body.appendChild(renderer.domElement);
+//document.body.appendChild(renderer.domElement);
+
+var gameContainer;
+
+gameContainer = document.querySelectorAll("div.game-container")[0];
+// hide the 2D version
+gameContainer.style.display = "none";
+// add the 3D version
+gameContainer.parentNode.insertBefore(renderer.domElement, gameContainer);
 
 animate = function() {
 
