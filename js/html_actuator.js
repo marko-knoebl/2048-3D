@@ -287,8 +287,7 @@ HTMLActuator.prototype.scoreTweetButton = function () {
   var tweet = document.createElement("a");
   tweet.classList.add("twitter-share-button");
   tweet.setAttribute("href", "https://twitter.com/share");
-  tweet.setAttribute("data-url", "http://git.io/JcE2GQ");
-  tweet.setAttribute("data-counturl", "http://joppi.github.io/2048-3D/");
+  tweet.setAttribute("data-url", "http://marko-knoebl.github.io/2048-3D/");
   tweet.textContent = "Tweet";
 
   var text = "I scored " + this.score + " points at 2048-3D, a game where you " +
