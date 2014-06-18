@@ -9,9 +9,12 @@ camera.position.z = 1500;
 scene = new THREE.Scene();
 scene.allObjects = [];
 
+whiteMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
+blackMaterial = new THREE.MeshLambertMaterial({color: 0x333333});
+
 cubeSize = 160;
 materials = {
-  2: new THREE.MeshLambertMaterial({color: 0xffffff}),
+  2: new THREE.MeshLambertMaterial({color: 0xeeeeee}),
   4: new THREE.MeshLambertMaterial({color: 0x888888}),
   8: new THREE.MeshLambertMaterial({color: 0xff9944}),
   16: new THREE.MeshLambertMaterial({color: 0xee8844}),
@@ -23,6 +26,10 @@ materials = {
   1024: new THREE.MeshLambertMaterial({color: 0xe0b51e}),
   2048: new THREE.MeshLambertMaterial({color: 0xe0b10d}),
 };
+var i;
+for (i = 11; i <= 27; i++){
+  materials[Math.pow(2, i).toString()] = blackMaterial;
+}
 
 // set up lights
 (function() {
@@ -113,19 +120,14 @@ geometries = {
   '2048' : new THREE.TextGeometry('2048', {font: 'helvetiker', weight: 'bold', size: 45, height:0.6}),
 };
 
-cubeGeometries = {
-  '2' : new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize),
-  '4' : new THREE.CubeGeometry(cubeSize+2, cubeSize+2, cubeSize+2),
-  '8' : new THREE.CubeGeometry(cubeSize+4, cubeSize+4, cubeSize+4),
-  '16' : new THREE.CubeGeometry(cubeSize+6, cubeSize+6, cubeSize+6),
-  '32' : new THREE.CubeGeometry(cubeSize+8, cubeSize+8, cubeSize+8),
-  '64' : new THREE.CubeGeometry(cubeSize+10, cubeSize+10, cubeSize+10),
-  '128' : new THREE.CubeGeometry(cubeSize+12, cubeSize+12, cubeSize+12),
-  '256' : new THREE.CubeGeometry(cubeSize+14, cubeSize+14, cubeSize+14),
-  '512' : new THREE.CubeGeometry(cubeSize+16, cubeSize+16, cubeSize+16),
-  '1024' : new THREE.CubeGeometry(cubeSize+18, cubeSize+18, cubeSize+18),
-  '2048' : new THREE.CubeGeometry(cubeSize+20, cubeSize+20, cubeSize+20),
-};
+for (i = 12; i <= 27; i++) {
+  geometries[Math.pow(2, i)] = new THREE.TextGeometry(i.toString(), {font: 'helvetiker', weight: 'bold', size: 30, height: 0.6});
+}
+
+cubeGeometries = {};
+for (i = 0; i <= 27; i++) {
+  cubeGeometries[Math.pow(2, i+1)] = new THREE.CubeGeometry(cubeSize+2*i, cubeSize+2*i, cubeSize+2*i);
+}
 
 tilesToProcess = [];
 
@@ -141,7 +143,7 @@ HTMLActuator.prototype.addTile = function (tile) {
   if (tile.value === 2 ) {
     text = new THREE.Mesh(geometries[tile.value], materials[4]);
   } else {
-    text = new THREE.Mesh(geometries[tile.value], materials[2]);
+    text = new THREE.Mesh(geometries[tile.value], whiteMaterial);
   }
 
   // position number
